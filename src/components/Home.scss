@@ -1,0 +1,52 @@
+.home-container {
+  height: calc(100vh - 64px);
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - 64px);
+  align-items: center;
+  .MuiCircularProgress-root {
+    color: #b093bb;
+  }
+}
+
+.buttons-container {
+  margin: 2em;
+}
+
+.filters-container {
+  margin-top: 1em;
+  //padding: 0.5em 1em;
+}
+
+.filter-button{
+    height: 100%;
+}
+
+.product-type {
+  width: 80%;
+}
+
+.mode-view-button {
+  .MuiButton-startIcon {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+}
+
+.sort-control {
+    width: 50%;
+}
+
+.buttons-right {
+    display: flex;
+    justify-content: flex-end;
+    padding-left: 12px;
+    gap: 8px;
+}
+
+.products-container {
+    margin: 2em;
+}

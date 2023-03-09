@@ -1,0 +1,19 @@
+.appbar {
+  &.MuiPaper-root {
+    background-color: #c4bfdb;
+    color: #000;
+  }
+}
+
+.logo {
+    height: 80px;
+}
+
+.toolbar {
+  margin: auto;
+  .MuiTypography-root {
+    font-family: "Cabin", sans-serif;
+    font-size: 2em;
+    font-style: italic;
+  }
+}
