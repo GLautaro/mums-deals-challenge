@@ -1,0 +1,12 @@
+.products-list-container {
+  margin-top: 1em;
+  @media (min-width: 1280px) {
+    padding-left: 4em;
+    padding-right: 4em;
+  }
+}
+
+.grid-item-container {
+  display: flex;
+  justify-content: center;
+}

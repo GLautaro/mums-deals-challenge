@@ -25,6 +25,7 @@ h5,
 h6,
 label,
 button,
-li {
+li,
+div {
   font-family: "Cabin", sans-serif !important;
 }

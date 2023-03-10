@@ -17,24 +17,36 @@ import {
   ListItemText,
   MenuItem,
   ButtonGroup,
+  capitalize,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import GridViewIcon from "@mui/icons-material/GridView";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { get } from "../api";
-import { capitalize } from "../utils/stringUtils";
-import ProductList from "./ProductList";
+import ProductView from "./ProductView";
 import "./Home.scss";
+import { sortAndFilterProduct } from "../utils/productUtils";
 
 const Home = () => {
+  //states
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [openFilter, setOpenFilter] = useState(false);
+  const [productView, setProductView] = useState<"grid" | "list">("grid");
+  const [sortBy, setSortBy] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<number[]>([1, 250]);
+
+  //consts
   const productTypes = useMemo(
     () => [...new Set(products.map((product) => product.product_type))],
     [products]
   );
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
+  const productsResult: Product[] = useMemo(
+    () => sortAndFilterProduct(products, sortBy, selectedTypes, priceRange),
+    [products, sortBy, selectedTypes, priceRange]
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,6 +72,10 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+  const handleSortByChange = (event: SelectChangeEvent) => {
+    setSortBy(event.target.value);
+  };
+
   const handleProductTypeChange = (
     event: SelectChangeEvent<typeof selectedTypes>
   ) => {
@@ -67,6 +83,13 @@ const Home = () => {
       target: { value },
     } = event;
     setSelectedTypes(typeof value === "string" ? value.split(",") : value);
+  };
+
+  const handlePriceRangeChange = (
+    event: Event,
+    newValue: number | number[]
+  ) => {
+    setPriceRange(newValue as number[]);
   };
 
   if (loading) {
@@ -94,23 +117,35 @@ const Home = () => {
             </Grid>
             <Grid item xs={9} className="buttons-right">
               <ButtonGroup className="mode-view-button">
-                <Button startIcon={<GridViewIcon />} />
-                <Button startIcon={<FormatListBulletedIcon />} />
+                <Button
+                  fullWidth
+                  startIcon={<GridViewIcon />}
+                  onClick={() => setProductView("grid")}
+                />
+                <Button
+                  fullWidth
+                  startIcon={<FormatListBulletedIcon />}
+                  onClick={() => setProductView("list")}
+                />
               </ButtonGroup>
               <FormControl className="sort-control">
                 <InputLabel>Sort results</InputLabel>
-                <Select label="Sort results">
-                  <MenuItem>A-Z</MenuItem>
-                  <MenuItem>Z-A</MenuItem>
-                  <MenuItem>Price: Low to High</MenuItem>
-                  <MenuItem>Price: High to Low</MenuItem>
+                <Select
+                  value={sortBy}
+                  onChange={handleSortByChange}
+                  label="Sort results"
+                >
+                  <MenuItem value="nameAsc">A-Z</MenuItem>
+                  <MenuItem value="nameDesc">Z-A</MenuItem>
+                  <MenuItem value="priceAsc">Price: Low to High</MenuItem>
+                  <MenuItem value="priceDesc">Price: High to Low</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12}>
               <Collapse in={openFilter}>
                 <Grid container spacing={2} className="filters-container">
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
                     <FormControl className="product-type">
                       <InputLabel>Product Type</InputLabel>
                       <Select
@@ -142,9 +177,16 @@ const Home = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4} className="price-slider">
                     <Typography>Price Range</Typography>
-                    <Slider />
+                    <Slider
+                      value={priceRange}
+                      onChange={handlePriceRangeChange}
+                      valueLabelDisplay="auto"
+                      min={1}
+                      max={300}
+                      getAriaValueText={(value) => `$${value}`}
+                    />
                   </Grid>
                 </Grid>
               </Collapse>
@@ -152,7 +194,7 @@ const Home = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} className="products-container">
-          <ProductList products={products} />
+          <ProductView products={productsResult} view={productView} />
         </Grid>
       </Grid>
     </div>

@@ -38,6 +38,7 @@
 
 .sort-control {
     width: 50%;
+    max-width: 300px;
 }
 
 .buttons-right {
@@ -49,4 +50,8 @@
 
 .products-container {
     margin: 2em;
+}
+
+.price-slider {
+  padding: 8px;
 }
