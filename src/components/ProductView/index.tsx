@@ -36,7 +36,7 @@ const ProductGrid: FC<ProductListGridProps> = ({ products }) => {
   return (
     <>
       {products.map((product, idx) => (
-        <Grid item xs={12} md={4} key={product.id + idx}>
+        <Grid item xs={12} md={4} key={product.id + idx} className="grid-item-container">
           <ProductCardItem product={product} />
         </Grid>
       ))}
